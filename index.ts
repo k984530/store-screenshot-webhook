@@ -108,6 +108,19 @@ app.get("/health", (req, res) => {
   res.json({ status: "ok", subscribers: loadSubscribers().length });
 });
 
+// Verify subscription (public API for MCP)
+app.get("/verify/:email", (req, res) => {
+  const email = req.params.email.toLowerCase().trim();
+  const subscribers = loadSubscribers();
+  const isSubscribed = subscribers.includes(email);
+
+  res.json({
+    email,
+    subscribed: isSubscribed,
+    status: isSubscribed ? "active" : "none"
+  });
+});
+
 // List subscribers (protected - for admin use)
 app.get("/subscribers", (req, res) => {
   const authKey = req.headers["x-admin-key"];
